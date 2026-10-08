@@ -15,27 +15,41 @@ export default function ProductDetail() {
   const { colors } = useTheme();
   const { add, count } = useCart();
 
-  const [product, setProduct] = useState<Product | null>(null);
+  const [productResult, setProductResult] = useState<{
+    requestKey: string;
+    product: Product | null;
+    error: string | null;
+  } | null>(null);
   const [favorite, setFavorite] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [added, setAdded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const requestKey = `${id ?? ""}:${attempt}`;
+  const currentResult = productResult?.requestKey === requestKey ? productResult : null;
+  const product = currentResult?.product ?? null;
+  const error = currentResult?.error ?? null;
+  const loading = Boolean(id) && !currentResult;
 
   useEffect(() => {
     if (!id) return;
-    setLoading(true);
-    setError(null);
+    let active = true;
     api
       .product(id)
-      .then(({ product }) => setProduct(product))
-      .catch((e: any) => setError(e?.message || "Couldn't load this product"))
-      .finally(() => setLoading(false));
+      .then(({ product }) => {
+        if (active) setProductResult({ requestKey, product, error: null });
+      })
+      .catch((e: any) => {
+        if (active) setProductResult({ requestKey, product: null, error: e?.message || "Couldn't load this product" });
+      });
     api
       .favorites()
-      .then(({ products }) => setFavorite(products.some((p) => p._id === id)))
+      .then(({ products }) => {
+        if (active) setFavorite(products.some((p) => p._id === id));
+      })
       .catch(() => {});
-  }, [id, attempt]);
+    return () => {
+      active = false;
+    };
+  }, [id, attempt, requestKey]);
 
   const toggleFavorite = async () => {
     setFavorite((f) => !f);

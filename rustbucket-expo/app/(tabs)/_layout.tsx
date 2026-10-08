@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, type ComponentProps } from "react";
 import { View, Text, Pressable } from "react-native";
 import { Tabs, useRouter } from "expo-router";
-import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Home, ShoppingBag, LifeBuoy, User } from "lucide-react-native";
 import { GlassSurface } from "@/components/GlassSurface";
 import { useSession } from "@/lib/session";
@@ -15,7 +14,9 @@ const TABS = [
   { name: "profile", label: "You", Icon: User },
 ] as const;
 
-function GlassTabBar({ state, navigation }: BottomTabBarProps) {
+type GlassTabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>["tabBar"]>>[0];
+
+function GlassTabBar({ state, navigation }: GlassTabBarProps) {
   const { colors, isDark } = useTheme();
   const { count } = useCart();
 
@@ -25,6 +26,7 @@ function GlassTabBar({ state, navigation }: BottomTabBarProps) {
         intensity={isDark ? 55 : 40}
         className="flex-row rounded-[1.4rem] border p-2"
         style={{
+          flexDirection: "row",
           borderColor: colors.border,
           backgroundColor: isDark ? "rgba(20,31,23,0.55)" : "rgba(255,255,255,0.55)",
         }}

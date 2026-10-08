@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { View, Text, Pressable, TextInput, ScrollView, LayoutAnimation, Platform, UIManager } from "react-native";
+import { View, Text, Pressable, TextInput, ScrollView, LayoutAnimation } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import {
@@ -14,11 +14,6 @@ import {
   MessageCircle,
 } from "lucide-react-native";
 import { useTheme } from "@/lib/theme";
-
-// Simple expand/collapse animation for the answers.
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 type Article = { q: string; a: string };
 type Topic = { title: string; Icon: typeof Truck; articles: Article[] };

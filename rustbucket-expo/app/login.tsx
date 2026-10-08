@@ -1,5 +1,16 @@
-import { useState } from "react";
-import { View, Text, Pressable, TextInput, Image, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  Image,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,6 +41,19 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+    const showSubscription = Keyboard.addListener(showEvent, () => setKeyboardVisible(true));
+    const hideSubscription = Keyboard.addListener(hideEvent, () => setKeyboardVisible(false));
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const submit = async () => {
     setBusy(true);
@@ -56,90 +80,107 @@ export default function Login() {
         style={StyleSheet.absoluteFill}
       />
 
-      {/* Hero product, centred */}
-      <View className="h-[42%] w-full items-center justify-center">
-        <View
-          className="absolute h-64 w-64 rounded-full"
-          style={{ backgroundColor: surface.glow, transform: [{ scale: 1.1 }] }}
-        />
-        <Image source={headphones} className="h-[82%] w-[82%]" resizeMode="contain" />
-      </View>
-
-      <SafeAreaView edges={["bottom"]} className="flex-1 justify-end px-6 pb-8">
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined}>
-          <Text className="text-[11px] font-sans-bold uppercase tracking-[3px] text-palm dark:text-dark-palm">
-            Sound, made substantial.
-          </Text>
-          <Text className="mt-2 font-display text-[36px] leading-[40px] text-lime dark:text-dark-lime">
-            Welcome to{"\n"}Rust Bucket.
-          </Text>
-
-          <GlassSurface
-            intensity={50}
-            tint="dark"
-            className="mt-7 rounded-[28px] p-4"
-            style={{
-              borderWidth: 1,
-              borderColor: "rgba(255,255,255,0.14)",
-              backgroundColor: "rgba(255,255,255,0.06)",
-            }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <SafeAreaView edges={["bottom"]} className="flex-1">
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
+            keyboardShouldPersistTaps="handled"
           >
-            <View className="gap-3">
-              <GlassInput icon={<Mail size={16} color={colors.lime} />}>
-                <TextInput
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="Email address"
-                  placeholderTextColor="rgba(244,236,143,0.45)"
-                  autoCapitalize="none"
-                  autoComplete="email"
-                  keyboardType="email-address"
-                  className="h-12 flex-1 text-[14px]"
-                  style={{ color: colors.lime }}
-                />
-              </GlassInput>
-              <GlassInput icon={<LockKeyhole size={16} color={colors.lime} />}>
-                <TextInput
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Password"
-                  placeholderTextColor="rgba(244,236,143,0.45)"
-                  secureTextEntry
-                  autoComplete="password"
-                  className="h-12 flex-1 text-[14px]"
-                  style={{ color: colors.lime }}
-                />
-              </GlassInput>
+            <View className="h-[42%] w-full items-center justify-center">
+              <View
+                className="absolute h-64 w-64 rounded-full"
+                style={{ backgroundColor: surface.glow, transform: [{ scale: 1.1 }] }}
+              />
+              <Image source={headphones} className="h-[82%] w-[82%]" resizeMode="contain" />
+            </View>
 
-              {error ? <Text className="px-1 text-[12px] text-[#ff8a80]">{error}</Text> : null}
+            <View
+              className="flex-1 justify-end px-6"
+              style={{
+                backgroundColor: keyboardVisible ? "rgba(0,0,0,0.28)" : "transparent",
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+              }}
+            >
+              <Text className="text-[11px] font-sans-bold uppercase tracking-[3px] text-palm dark:text-dark-palm">
+                Sound, made substantial.
+              </Text>
+              <Text className="mt-2 font-display text-[36px] leading-[40px] text-lime dark:text-dark-lime">
+                Welcome to{"\n"}Rust Bucket.
+              </Text>
 
-              <Pressable onPress={() => router.push("/forgot-password")} className="self-end" hitSlop={8}>
-                <Text className="text-[12px] font-sans-medium text-palm dark:text-dark-palm">
-                  Forgot password?
-                </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={submit}
-                disabled={disabled}
-                className="mt-1 flex-row items-center justify-center gap-2 rounded-2xl bg-lime py-3.5 dark:bg-dark-lime"
-                style={{ opacity: disabled ? 0.5 : 1 }}
+              <GlassSurface
+                intensity={50}
+                tint="dark"
+                className="mt-7 rounded-[28px] p-4"
+                style={{
+                  borderWidth: 0,
+                  borderColor: "rgba(255,255,255,0.14)",
+                  backgroundColor: "rgba(255,255,255,0.06)",
+                }}
               >
-                <Text className="text-[14px] font-sans-bold text-evergreen dark:text-dark-background">
-                  {busy ? "Signing in…" : "Sign in"}
+                <View className="gap-3">
+                  <GlassInput icon={<Mail size={16} color={colors.lime} />}>
+                    <TextInput
+                      value={email}
+                      onChangeText={setEmail}
+                      placeholder="Email address"
+                      placeholderTextColor="rgba(244,236,143,0.45)"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      className="h-12 flex-1 text-[14px]"
+                      style={{ color: colors.lime }}
+                    />
+                  </GlassInput>
+                  <GlassInput icon={<LockKeyhole size={16} color={colors.lime} />}>
+                    <TextInput
+                      value={password}
+                      onChangeText={setPassword}
+                      placeholder="Password"
+                      placeholderTextColor="rgba(244,236,143,0.45)"
+                      secureTextEntry
+                      autoComplete="password"
+                      className="h-12 flex-1 text-[14px]"
+                      style={{ color: colors.lime }}
+                    />
+                  </GlassInput>
+
+                  {error ? <Text className="px-1 text-[12px] text-[#ff8a80]">{error}</Text> : null}
+
+                  <Pressable onPress={() => router.push("/forgot-password")} className="self-end" hitSlop={8}>
+                    <Text className="text-[12px] font-sans-medium text-palm dark:text-dark-palm">
+                      Forgot password?
+                    </Text>
+                  </Pressable>
+
+                  <Pressable
+                    onPress={submit}
+                    disabled={disabled}
+                    className="mt-1 flex-row items-center justify-center gap-2 rounded-2xl bg-lime py-3.5 dark:bg-dark-lime"
+                    style={{ opacity: disabled ? 0.5 : 1 }}
+                  >
+                    <Text className="text-[14px] font-sans-bold text-evergreen dark:text-dark-background">
+                      {busy ? "Signing in…" : "Sign in"}
+                    </Text>
+                    <ArrowRight size={16} color={isDark ? "#0b120d" : "#0b290a"} />
+                  </Pressable>
+                </View>
+              </GlassSurface>
+
+              <Pressable onPress={() => router.push("/signup")} className="mt-5 self-center" hitSlop={8}>
+                <Text className="text-[13px] text-palm dark:text-dark-palm">
+                  New here? <Text className="font-sans-bold text-lime dark:text-dark-lime">Create an account</Text>
                 </Text>
-                <ArrowRight size={16} color={isDark ? "#0b120d" : "#0b290a"} />
               </Pressable>
             </View>
-          </GlassSurface>
-
-          <Pressable onPress={() => router.push("/signup")} className="mt-5 self-center" hitSlop={8}>
-            <Text className="text-[13px] text-palm dark:text-dark-palm">
-              New here? <Text className="font-sans-bold text-lime dark:text-dark-lime">Create an account</Text>
-            </Text>
-          </Pressable>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </View>
   );
 }

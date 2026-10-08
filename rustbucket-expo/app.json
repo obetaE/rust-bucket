@@ -7,18 +7,17 @@
     "icon": "./assets/images/icon.png",
     "scheme": "rustbucket",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.obeta.rustbucket",
       "buildNumber": "1"
     },
     "android": {
+      "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "backgroundColor": "#132a13",
         "foregroundImage": "./assets/images/adaptive-icon.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.obeta.rustbucket",
       "versionCode": 1
@@ -43,7 +42,10 @@
             "backgroundColor": "#0b120d"
           }
         }
-      ]
+      ],
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

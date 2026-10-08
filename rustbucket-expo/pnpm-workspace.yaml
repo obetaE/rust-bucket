@@ -1,0 +1,5 @@
+allowedDeprecatedVersions:
+  eslint: "9.39.5"
+
+overrides:
+  "xcode>uuid": "11.1.1"
