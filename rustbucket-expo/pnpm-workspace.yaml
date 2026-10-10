@@ -1,3 +1,6 @@
+allowBuilds:
+  unrs-resolver: true
+
 allowedDeprecatedVersions:
   eslint: "9.39.5"
 

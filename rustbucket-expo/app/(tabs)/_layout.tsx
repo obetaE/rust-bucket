@@ -26,7 +26,6 @@ function GlassTabBar({ state, navigation }: GlassTabBarProps) {
         intensity={isDark ? 55 : 40}
         className="flex-row rounded-[1.4rem] border p-2"
         style={{
-          flexDirection: "row",
           borderColor: colors.border,
           backgroundColor: isDark ? "rgba(20,31,23,0.55)" : "rgba(255,255,255,0.55)",
         }}
