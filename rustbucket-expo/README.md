@@ -7,8 +7,8 @@ with a glassmorphic navbar, real light/dark mode, an upgraded auth flow
 
 ## Stack
 
-- Expo SDK 54 (React Native 0.81.5, React 19.1) — versions re-verified fresh
-  against Expo's own `bundledNativeModules.json` for this build
+- Expo SDK 57 (React Native 0.86.3, React 19.2.3) — versions aligned with
+  Expo's SDK compatibility checks
 - Expo Router, NativeWind v4 + Tailwind CSS v3
 - `expo-blur` for the glass effect (chosen over `expo-glass-effect`, which is
   iOS-only — `BlurView` renders a real blur on both iOS and Android)

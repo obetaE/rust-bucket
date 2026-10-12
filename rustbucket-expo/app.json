@@ -20,7 +20,7 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.obeta.rustbucket",
-      "versionCode": 1
+      "versionCode": 3
     },
     "web": {
       "bundler": "metro",

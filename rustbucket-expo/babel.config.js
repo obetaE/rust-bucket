@@ -5,7 +5,7 @@ module.exports = function (api) {
       ["babel-preset-expo", { jsxImportSource: "nativewind" }],
       "nativewind/babel",
     ],
-    // No Reanimated plugin here on purpose: babel-preset-expo (SDK 54) adds
+    // No Reanimated plugin here on purpose: babel-preset-expo (SDK 57) adds
     // react-native-worklets/plugin automatically when it's installed, so
     // listing it again would run it twice.
   };
